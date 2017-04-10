@@ -75,6 +75,7 @@ class ConfigWatcher:
     def __init__(self, scan_folder):
         """
         """
+        self.logger = logging.getLogger('ConfigWatcher')
         self.scan_folder = scan_folder
 
     def handle_read_callback(self, notifier):
@@ -82,10 +83,12 @@ class ConfigWatcher:
         Just stop receiving IO read events after the first
         iteration (unrealistic example).
         """
-        print('handle_read callback')
-        notifier.loop.stop()
+        print('Action on modules parameters folder.')
+
+        #notifier.loop.stop()
     
-    def scanner(self):
+    def scanner(self, watcher_process_queue):
+        self.logger.info('Wartchong folder.')
         wm = pyinotify.WatchManager()
         loop = asyncio.get_event_loop()
         notifier = pyinotify.AsyncioNotifier(wm, loop,
@@ -96,5 +99,6 @@ class ConfigWatcher:
 
     def watch(self):
         self.watcher_process_queue = Queue()
-        self.process = Process(target=self.scanner, args=())
+        self.process = Process(target=self.scanner, args=(self.watcher_process_queue,))
         self.process.start()
+        self.process.join() 
