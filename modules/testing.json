@@ -1,0 +1,7 @@
+{
+    "name": "Testing",
+    "command": "ls -hal",
+    "trigger": {
+        "every": "60"
+    }
+}
